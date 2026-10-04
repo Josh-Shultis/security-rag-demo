@@ -1,0 +1,9 @@
+{
+  "body": {
+    "note_id": "SYNTH-NOTE-B-1",
+    "owner": "Account B",
+    "text": "SYNTH-CANARY-B-7"
+  },
+  "requester": "Account B",
+  "status": 200
+}

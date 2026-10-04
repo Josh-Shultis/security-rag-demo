@@ -1,0 +1,7 @@
+{
+  "body": {
+    "error": "forbidden"
+  },
+  "requester": "Account A",
+  "status": 403
+}
