@@ -1,5 +1,7 @@
 # Security RAG: reproducible synthetic security investigation
 
+[![Validate synthetic investigation](https://github.com/Josh-Shultis/security-rag-demo/actions/workflows/validate.yml/badge.svg)](https://github.com/Josh-Shultis/security-rag-demo/actions/workflows/validate.yml)
+
 This is a public, offline demo of how I work a security case from a precise question to the decisive artifact, a control, and a fix. It uses a deliberately vulnerable in-memory mock and synthetic evidence so the full chain can be reviewed without exposing private vendor material.
 
 ## What this demonstrates
