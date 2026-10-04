@@ -1,27 +1,61 @@
 # Three-minute walkthrough script
 
-The [video](../media/walkthrough.mp4) uses a synthetic narrator. Codex drafted the narration and slides; it is not a recording of Josh speaking. The repository code and fixtures remain the authoritative material.
+The current video uses a synthetic narrator. This script is written in first person so I can replace that narration with my own voice later without changing the technical content.
 
-## Scene 1 — What this shows
+## Scene 1 — What this project is
 
-This is Security RAG, a local evidence retrieval tool, shown through one fully synthetic investigation. I chose a deliberately vulnerable mock note service because it lets a reviewer inspect the complete path from an input to an output without exposing any private case. Clone the public repository, create a Python virtual environment, install the package, and run the investigation module. The demo needs no account, model, API key, or network connection. It builds a temporary index and deletes it when the run finishes.
+This is Security RAG, a local tool I use to keep security conclusions tied back to the evidence that supports them.
 
-## Scene 2 — The security question
+For this public demo I built a completely synthetic case around a deliberately vulnerable note service. That gives me something I can show end to end without publishing any private vendor evidence.
 
-The question is precise: can simulated Account A read a note owned by simulated Account B using its ID? The mock's owner state says the note belongs to Account B and is owner only. Account A controls the requested note ID. The vulnerable read method looks up the note but never checks whether the requester owns it. The fixed method adds that check. These are string identities in an in-memory model, not real logins or access control lists.
+The demo runs locally. There is no API key, model account, vendor login, or network dependency. It builds a temporary evidence index, runs the case, and removes the temporary data when it is done.
 
-## Scene 3 — The decisive evidence
+## Scene 2 — The question
 
-The supplied request names Account A and the target note. The vulnerable response has status two hundred and includes Account B's synthetic canary. The runner regenerates that response from the mock and compares it to the checked-in fixture before indexing it. This gives us a reproducible observation within this mock. A response file by itself would not prove who sent a real request, which account owned a real object, or what a vendor backend did. Here, the mock code and test setup define those facts explicitly.
+The test is simple: can simulated Account A read an owner-only note that belongs to simulated Account B if Account A knows the note ID?
 
-## Scene 4 — Trace the conclusion
+I keep the note, requester, and target ID the same. The thing I change is the authorization check.
 
-Security RAG ingests the fixture files and searches for the canary inside the selected synthetic case. The result names the source file, its full SHA-256, an artifact ID, and a chunk ID. The runner independently hashes the supplied file and checks that the index points to those same bytes. That is the key design choice: a reviewer can move from a conclusion back to exact source bytes, instead of trusting a model's summary. A hash proves byte identity in this run, not truth or origin.
+The vulnerable method looks up the note and returns it without checking the owner. The fixed method checks ownership before returning the note.
 
-## Scene 5 — Controls and limits
+Because this is a local mock, the account identities are just controlled strings. The point is the test design, not pretending these are real accounts.
 
-The fixed read returns four-oh-three to Account A, while still returning two hundred to the rightful owner. An unknown note returns four-oh-four. That last result is a negative control, not proof that authorization works. The supported conclusion is narrow: the deliberately vulnerable mock discloses the canary, and this particular fix blocks that read. The demo does not establish a bug in any real product, real account identity, or a real attacker benefit. Those would need authenticated captures and native account and ownership evidence.
+## Scene 3 — What proves the behavior
 
-## Scene 6 — Engineering and authorship
+The request fixture shows Account A asking for Account B's note.
 
-I kept the public release as a fresh export of selected retrieval code, with only synthetic fixtures. The private research history and raw Burp or HAR captures stay outside it. Tests check the vulnerable and fixed paths, source linking, offline execution, and preservation of an existing data root. The code uses a single-user research model; case filters help retrieval, but are not multi-user authorization. Codex assisted with this release demo and documentation, and prior AI assistance on the private engine has not been fully inventoried. What I can defend here is the test design, the exact artifacts, and the limits of the conclusion.
+The vulnerable response returns HTTP 200 and contains the synthetic canary from Account B's note.
+
+The runner regenerates that response from the code and checks it against the tracked fixture before the evidence is indexed. So I am not asking the reviewer to trust a screenshot or a summary. They can inspect the request, the response, and the code that produced it.
+
+## Scene 4 — Trace the conclusion back to evidence
+
+This is the part I care about most.
+
+Security RAG ingests the supplied artifacts, finds the canary, and returns the exact source file, SHA-256, artifact ID, and chunk ID.
+
+The runner then hashes the source file independently and checks that the indexed result points back to those same bytes.
+
+That gives me a chain from the conclusion back to the original evidence instead of relying on whatever an AI model says happened.
+
+The hash proves which bytes were used in this demo. It does not prove that the contents are true just because they have a hash.
+
+## Scene 5 — Controls and fix
+
+The fixed method returns 403 to Account A for the same note.
+
+The owner control still returns 200 to Account B, so the fix did not simply break all reads.
+
+I also test an unknown note, which returns 404. I treat that as a separate control, not as proof that authorization is working.
+
+The conclusion stays narrow: the vulnerable version exposes the canary in this controlled mock, and the ownership check blocks that same read.
+
+## Scene 6 — Why I built it this way
+
+This is basically how I try to work real security cases: narrow the question, preserve the original artifacts, keep exact IDs and timestamps, test a control, and separate what I observed from what I am only inferring.
+
+The public repository contains synthetic fixtures and selected retrieval code only. My private research history, Burp captures, HAR files, and vendor reports stay private.
+
+Codex helped with parts of the public export, tests, documentation, and walkthrough. I still make the final call on what the evidence supports, what remains unproven, and how the case should be framed.
+
+What I want a reviewer to see here is not a flashy mock vulnerability. It is the way I make a security conclusion traceable and reviewable.
