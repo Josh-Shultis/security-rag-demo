@@ -1,4 +1,6 @@
-# Security RAG: reproducible synthetic security investigation
+# Offline Security RAG Investigation Demo — Synthetic Evidence
+
+This public repository is a reproducible offline demonstration of a controlled synthetic security investigation, including a vulnerable mock, fixed control, source-linked artifacts, and regression tests. It is a demonstration, not the private production research workspace.
 
 [![Validate synthetic investigation](https://github.com/Josh-Shultis/security-rag-demo/actions/workflows/validate.yml/badge.svg)](https://github.com/Josh-Shultis/security-rag-demo/actions/workflows/validate.yml)
 
