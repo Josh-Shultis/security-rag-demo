@@ -5,8 +5,29 @@ __pycache__/
 build/
 .pytest_cache/
 .pytest-tmp/
+
+# Local credentials and browser-session material
 .env
 .env.*
+!.env.example
+*cookie*
+*cookies*
+*credential*.json
+*credentials*.json
+*client_secret*.json
+*token*.json
+browser-profile*/
+browser_profiles*/
+
+# Private keys and certificates
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+
+# Local data and captured evidence
 *.db
 *.sqlite*
 *.har
@@ -15,8 +36,6 @@ build/
 *.log
 *.zip
 *.7z
-*.pem
-*.key
 output/
 tmp/
 raw/
